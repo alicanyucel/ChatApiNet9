@@ -32,16 +32,15 @@ namespace ChatApi.Controllers
             await context.SaveChangesAsync();
             return NoContent();
         }
-        [HttpGet]
-        public async Task<IActionResult>(string Name,CancellationToken cancellationToken)
+       public async Task<IActionResult> Login(string name,CancellationToken cancellationToken)
         {
-            User? user= await context.Users.FirstOrDefaultAsync(p=>p.Name==Name, cancellationToken);
-            if(user == null)
+            User? user = await context.Users.FirstOrDefaultAsync(p=>p.Name == name,cancellationToken);
+            if(user is null)
             {
                 return BadRequest(new { Message = "kullanıcı bulunamadi" });
 
             }
-            return Ok(new {Message="giriş başarılı"});
+            return Ok(new { Message = "giriş başarılı" });
         }
     }
 }
