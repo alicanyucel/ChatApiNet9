@@ -1,5 +1,6 @@
 
 using ChatApi.Context;
+using ChatApi.Hubs;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatApi
@@ -17,7 +18,7 @@ namespace ChatApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            builder.Services.AddSignalR();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -33,7 +34,7 @@ namespace ChatApi
 
 
             app.MapControllers();
-
+            app.MapHub<ChatHub>("/chat-hub");
             app.Run();
         }
     }

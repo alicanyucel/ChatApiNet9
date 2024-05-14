@@ -40,6 +40,8 @@ namespace ChatApi.Controllers
                 return BadRequest(new { Message = "kullanıcı bulunamadi" });
 
             }
+            user.Status = "online";
+            await context.SaveChangesAsync(cancellationToken);
             return Ok(new { Message = "giriş başarılı" });
         }
     }
