@@ -1,15 +1,17 @@
 ﻿using ChatApi.Context;
 using ChatApi.Dtos;
+using ChatApi.Hubs;
 using ChatApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatApi.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public sealed class ChatController(ApplicationDbContext context) : ControllerBase
+    public sealed class ChatController(ApplicationDbContext context, IHubContext<ChatHub> hubContext) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetChat(Guid userId, Guid toUserId, CancellationToken cancellation)
@@ -19,7 +21,7 @@ namespace ChatApi.Controllers
             return Ok(chats);
         }
         [HttpPost]
-        public async Task<IActionResult>SendMessage(SendeMessageDto request,CancellationToken cancellationToken)
+        public async Task<IActionResult> SendMessage(SendeMessageDto request, CancellationToken cancellationToken)
         {
             Chat chat = new()
             {
@@ -28,8 +30,11 @@ namespace ChatApi.Controllers
                 Message = request.mesage,
                 Date = DateTime.Now
             };
-            await context.AddAsync(chat,cancellationToken);
-            await context.SaveChangesAsync();
+            await context.AddAsync(chat, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+            string connectionId = ChatHub.Users.First(p => p.Value == chat.ToUserId).Key;
+            await hubContext.Clients.Client(connectionId).SendAsync("Messages", chat);
+
             return Ok();
         }
     }

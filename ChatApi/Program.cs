@@ -1,6 +1,7 @@
 
 using ChatApi.Context;
 using ChatApi.Hubs;
+using DefaultCorsPolicyNugetPackage;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatApi
@@ -10,7 +11,7 @@ namespace ChatApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Services.AddDefaultCors();
             // Add services to the container.
             builder.Services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
           
@@ -29,7 +30,7 @@ namespace ChatApi
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors();
             app.UseAuthorization();
 
 

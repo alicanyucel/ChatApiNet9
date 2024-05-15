@@ -1,9 +1,11 @@
 ﻿using ChatApi.Context;
 using ChatApi.Dtos;
+using ChatApi.Hubs;
 using ChatApi.Models;
 using GenericFileService.Files;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 
